@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+    <title>Document</title>
+    <style>
+        table,
+        td,
+        th {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 10px;
+        }
+
+        table {
+            width: 80%;
+            margin: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="text-align:center;">
+        {% if request.user.is_authenticated %}
+        <h1>My TODO-LIST welcomes {{request.user}}.</h1>
+        <div>
+            <h3>You have {{unfinished_count}} Incomplete Tasks Left</h3>
+            
+            <a href="{% url 'task-create' %}">Add Task</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+        {% else %}
+        <h1>Hello Anonymous User</h1>
+        <p>You need to <a href="{% url 'login' %}">Login</a> here..</p>
+        {% endif %}
+
+    </div>
+    <table>
+        <tr>
+            <th>Task Name</th>
+            <th>Task Description</th>
+            <th>Assigned On</th>
+            <th>Links</th>
+        </tr>
+
+        {% for task in tasks %}
+        <tr>
+            <td>
+                {{task.title}}
+                {% if task.complete %}
+                    <br>(<i class="fas fa-check-circle" style="color: darkgreen;"> Completed !!!</i>)
+                {% endif %}
+            </td>
+            <td>{{task.description}}</td>
+            <td>{{task.created_on}}</td>
+            <td>
+                <a href="{% url 'task' task.id %}">View</a>
+                <a href="{% url 'task-edit' task.id %}">Edit</a>
+                <a href="{% url 'task-delete' task.id %}">Delete</a>
+            </td>
+        </tr>
+
+        {% empty %}
+        <h5>No Tasks Assigned !!</h5>
+        {% endfor %}
+
+
+    </table>
+</body>
+
+</html>
